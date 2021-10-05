@@ -1,0 +1,144 @@
+    calc_divide(new_operator_str, flag){
+        if (flag){
+            this.computed_value /= getFloat(new_operator_str,this.tempvalstr);
+            this.tempvalstr="";
+            this.lastexpr = "";
+            this.display();
+            return;
+        }
+        this.lastexpr = new_operator_str;
+        this.fullexpression+=new_operator_str;
+        this.computed_value /= getFloat(new_operator_str,this.tempvalstr);
+        this.tempvalstr="";
+        this.display();
+        this.previousoperator = this.currentoperator;
+    }
+    calc_subtract(new_operator_str, flag){
+        if (flag){
+            this.computed_value -= getFloat(new_operator_str,this.tempvalstr);
+            this.tempvalstr="";
+            this.lastexpr = "";
+            this.display();
+            return;
+        }
+        this.lastexpr = new_operator_str;
+        this.fullexpression += new_operator_str;
+        this.computed_value -= getFloat(new_operator_str, this.tempvalstr);
+        this.tempvalstr="";
+        this.display();
+    }
+    calc_multiply(new_operator_str, flag){
+        console.log(new_operator_str, "oay");
+        if (flag){
+            this.computed_value *= getFloat(new_operator_str,this.tempvalstr);
+            this.tempvalstr="";
+            this.lastexpr = "";
+            this.display();
+            return;
+        }
+        this.lastexpr = new_operator_str;
+        this.fullexpression += new_operator_str;
+        this.computed_value *= getFloat(new_operator_str,this.tempvalstr);
+        this.tempvalstr="";
+        this.display();
+    }
+
+    compute(operationBtnstr, flag){
+        console.log(operationBtnstr);
+        switch(operationBtnstr){
+            case '+': {this.calc_add(operationBtnstr, flag);
+                       this.currentoperator=operationBtnstr;}
+                break;
+            case '-': {this.calc_subtract(operationBtnstr, flag);
+                        this.currentoperator=operationBtnstr;}
+                break;
+            case '*': {this.calc_multiply(operationBtnstr, flag);
+                        this.currentoperator=operationBtnstr;}
+                break;
+            case '/': {this.calc_divide(operationBtnstr, flag);
+                        this.currentoperator=operationBtnstr;} 
+                break;
+            default: return;
+                break;
+        }
+    }
+    display(topval, bottomval){
+        input_display[0].innerText = topval;
+        output_display[0].innerText = bottomval;
+    }
+    clear(){
+        this.fullexpression = "";
+        this.computed_value = 0;
+        this.tempvalstr = "";
+        this.lastexpr = "";
+        this.display();
+    }
+
+    update(new_digit_str){
+        console.log("update called");
+        this.fullexpression+=new_digit_str;
+        this.tempvalstr+=new_digit_str;
+        this.display(this.fullexpression, );
+    }
+    calc_add(new_operator_str, flag){
+        if (flag){
+            this.computed_value += getFloat(new_operator_str,this.tempvalstr);
+            this.tempvalstr="";
+            this.lastexpr = "";
+            this.display();
+            return;
+        }
+        this.lastexpr = new_operator_str;
+        this.fullexpression+=new_operator_str;
+        this.computed_value += getFloat(new_operator_str,this.tempvalstr);
+        this.tempvalstr="";
+        this.display();
+    }
+
+    evaluate(){
+        this.compute(this.lastexpr, 1);
+        this.lastexpr = "";
+    }
+}
+allowed_char = {"0": 1, "1": 1, "2": 1, "3": 1, "4": 1, "5": 1, "6": 1, "7": 1, "8": 1,"9": 1, 
+                    "*": 1, "/": 1, "+": 1, "-": 1, "%": 1}
+allowed_operator = {"+": 1, "-":1, "*": 1, "/": 1};
+
+computer = {
+    '+': (x=0, y=0) =>{
+        return x+y;
+    },
+    '-': (x=0, y=0) =>{
+        return x-y;
+    },
+    '*': (x=1, y=1) =>{
+        return x*y
+    },
+    '/': (x=1, y=1) =>{
+        return x/y
+    }
+}
+var input_display = $('.input-area');
+var output_display = $('.output-area');
+$(document).ready(() => {
+    $('.clear-btn').on('click', ()=>{
+        calc.clear();
+    });
+
+    $('.num-btn').on('click', (clickedBtn)=>{
+      let new_char = clickedBtn.target.innerText;
+      calc.update(new_char);
+      console.log("new");
+    });
+
+    $('.operation-btn').on('click', (clickedBtn)=>{
+          console.log("operation triggered");
+          let new_char = clickedBtn.target.innerText;
+          input_display[0].innerText += (new_char);
+          input_display[0].innerText += (clickedBtn.target.innerText);
+          calc.compute(new_char, 1);
+        });
+
+    $('.eval-btn').on('click', ()=>{
+        calc.evaluate();
+      });
